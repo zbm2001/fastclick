@@ -3,3 +3,6 @@ Makefile
 component.json
 tests
 examples
+
+.project
+.idea
