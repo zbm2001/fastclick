@@ -1,4 +1,4 @@
-import {deviceIsIOS} from './const'
+import {deviceIsIOS} from './CONST'
 
 
 /**

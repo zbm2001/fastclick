@@ -1,3 +1,6 @@
+import presetEventListener from './presetEventListener'
+
+
 /**
  * Instantiate fast-clicking listeners on the specified layer.
  *
@@ -10,6 +13,17 @@ function FastClick (layer, options) {
 }
 
 assign(FastClick.prototype, {
+
+  /**
+   * Whether a click is currently being tracked.
+   *
+   * @type boolean
+   */
+  init (layer, options) {
+    assign(this, options)
+    this.layer = layer
+    this.presetEventListener()
+  },
 
   /**
    * Whether a click is currently being tracked.
@@ -65,7 +79,7 @@ assign(FastClick.prototype, {
    *
    * @type Element
    */
-  layer: layer,
+  layer: null,
 
   /**
    * The minimum time between tap(touchstart and touchend) events

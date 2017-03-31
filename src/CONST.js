@@ -1,3 +1,6 @@
+import {assign} from 'z-utils'
+
+
 const userAgent = window.userAgent
 
 
@@ -7,6 +10,7 @@ const userAgent = window.userAgent
  * @type boolean
  */
 export const deviceIsWindowsPhone = userAgent.indexOf("Windows Phone") >= 0
+
 
 /**
  * Android requires exceptions.
@@ -21,7 +25,7 @@ export const deviceIsAndroid = userAgent.indexOf('Android') > 0 && !deviceIsWind
  *
  * @type boolean
  */
-export const deviceIsIOS = /iP(ad|hone|od)/.test(userAgent) && !deviceIsWindowsPhone;
+export const deviceIsIOS = /iP(ad|hone|od)/.test(userAgent) && !deviceIsWindowsPhone
 
 
 /**
@@ -29,7 +33,7 @@ export const deviceIsIOS = /iP(ad|hone|od)/.test(userAgent) && !deviceIsWindowsP
  *
  * @type boolean
  */
-export const deviceIsIOS4 = deviceIsIOS && /OS 4_\d(_\d)?/.test(userAgent);
+export const deviceIsIOS4 = deviceIsIOS && /OS 4_\d(_\d)?/.test(userAgent)
 
 
 /**
@@ -37,7 +41,7 @@ export const deviceIsIOS4 = deviceIsIOS && /OS 4_\d(_\d)?/.test(userAgent);
  *
  * @type boolean
  */
-export const deviceIsIOSWithBadTarget = deviceIsIOS && /OS [6-7]_\d/.test(userAgent);
+export const deviceIsIOSWithBadTarget = deviceIsIOS && /OS [6-7]_\d/.test(userAgent)
 
 
 /**
@@ -45,4 +49,4 @@ export const deviceIsIOSWithBadTarget = deviceIsIOS && /OS [6-7]_\d/.test(userAg
  *
  * @type boolean
  */
-export const deviceIsBlackBerry10 = userAgent.indexOf('BB10') > 0;
+export const deviceIsBlackBerry10 = userAgent.indexOf('BB10') > 0
