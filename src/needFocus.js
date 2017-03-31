@@ -10,10 +10,10 @@ import {deviceIsAndroid} from './CONST'
 export default function needsFocus (target) {
   switch (target.nodeName) {
     case 'TEXTAREA':
-      return true;
+      return true
 
     case 'SELECT':
-      return !deviceIsAndroid;
+      return !deviceIsAndroid
 
     case 'INPUT':
       switch (target.type) {
@@ -30,6 +30,6 @@ export default function needsFocus (target) {
       return !target.disabled && !target.readOnly
 
     default:
-      return (/\bneedsfocus\b/).test(target.className);
+      return (/\bneedsfocus\b/).test(target.className)
   }
 }

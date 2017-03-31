@@ -8,7 +8,7 @@ import presetEventListener from './presetEventListener'
  * @param {Element} layer The layer to listen on
  * @param {Object} [options={}] The options to override the defaults
  */
-function FastClick (layer, options) {
+export default function FastClick (layer, options) {
   this.init(layer, options)
 }
 

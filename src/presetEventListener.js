@@ -33,7 +33,7 @@ if (!Event.prototype.stopImmediatePropagation) {
 export default function presetEventListener () {
 
 
-  const eventTypes = assign({
+  let eventTypes = assign({
     click: true,
     touchstart: false,
     touchmove: false,
@@ -65,7 +65,7 @@ export default function presetEventListener () {
 
     // Android browser on at least 3.2 requires a new reference to the function in layer.onclick
     // - the old one won't work if passed to addEventListener directly.
-    this.layer.addEventListener('click', this.layer.onclick.bind(this.layer), false);
-    this.layer.onclick = null;
+    this.layer.addEventListener('click', this.layer.onclick.bind(this.layer), false)
+    this.layer.onclick = null
   }
 }

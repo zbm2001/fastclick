@@ -5,7 +5,7 @@
  * @param {Event} event
  */
 export default function sendClick (targetElement, event) {
-  var clickEvent, touch
+  let clickEvent, touch
 
   // On some Android devices activeElement needs to be blurred otherwise the synthetic click will have no effect (#24)
   if (document.activeElement && document.activeElement !== targetElement) {
