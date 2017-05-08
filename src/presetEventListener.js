@@ -2,6 +2,8 @@ import {assin, uuid, referenceTypes} from 'z-utils'
 import FastClick from './core'
 
 
+FastClick.eventListenerBindSign = null
+
 // Hack is required for browsers that don't support Event#stopImmediatePropagation (e.g. Android 2)
 // which is how FastClick normally stops click events bubbling to callbacks registered on the FastClick
 // layer when they are cancelled.
@@ -33,21 +35,23 @@ if (!Event.prototype.stopImmediatePropagation) {
 export default function presetEventListener () {
 
 
-  let eventTypes = assign({
+  let eventTypeCaptureHash = assign({
     click: true,
     touchstart: false,
     touchmove: false,
     touchend: false,
     touchcancel: false
-  }, deviceIsAndroid && {
-        mouseover: true,
-        mousedown: true,
-        mouseup: true
-      })
+  })
+
+  deviceIsAndroid && assign(eventTypeCapture, {
+    mouseover: true,
+    mousedown: true,
+    mouseup: true
+  })
 
 
-  for (let type in eventTypes) {
-    this.layer.addEventListener(type, this, eventTypes[type])
+  for (let type in eventTypeCaptureHash) {
+    this.layer.addEventListener(type, this, eventTypeCaptureHash[type])
   }
 
 
