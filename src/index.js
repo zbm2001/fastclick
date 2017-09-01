@@ -1,1 +1,1 @@
-import CONST from './CONST'
+export {default} from './core'

@@ -1,3 +1,6 @@
+import {deviceIsAndroid} from './CONST'
+
+
 /**
  * Send a click event to the specified element.
  *
@@ -16,7 +19,9 @@ export default function sendClick (targetElement, event) {
 
   // Synthesise a click event, with an extra attribute so it can be tracked
   clickEvent = document.createEvent('MouseEvents')
-  clickEvent.initMouseEvent(this.determineEventType(targetElement), true, true, window, 1, touch.screenX, touch.screenY, touch.clientX, touch.clientY, false, false, false, false, 0, null)
+
+  //Issue #159: Android Chrome Select Box does not open with a synthetic click event
+  clickEvent.initMouseEvent(deviceIsAndroid && targetElement.tagName === 'SELECT' ? 'mousedown' : 'click', true, true, window, 1, touch.screenX, touch.screenY, touch.clientX, touch.clientY, false, false, false, false, 0, null)
   clickEvent.forwardedTouchEvent = true
   targetElement.dispatchEvent(clickEvent)
 }

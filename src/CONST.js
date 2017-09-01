@@ -7,7 +7,7 @@ export const userAgent = window.navigator.userAgent
  *
  * @type boolean
  */
-export const deviceIsWindowsPhone = userAgent.indexOf("Windows Phone") >= 0
+export const deviceIsWindowsPhone = userAgent.indexOf("Windows Phone") > -1
 
 
 /**
@@ -48,3 +48,22 @@ export const deviceIsIOSWithBadTarget = deviceIsIOS && /OS [6-7]_\d/.test(userAg
  * @type boolean
  */
 export const deviceIsBlackBerry10 = userAgent.indexOf('BB10') > 0
+
+
+/**
+ * BlackBerry requires exceptions.
+ *
+ * @type boolean
+ */
+const presetEventArgs = [
+  ['click', !0],
+  ['touchstart', !1],
+  ['touchmove', !1],
+  ['touchend', !1],
+  ['touchcancel', !1]
+  // Set up event handlers as required
+].concat(deviceIsAndroid ? [
+  ['mouseover', !0],
+  ['mousedown', !0],
+  ['mouseup', !0]
+] : [])
