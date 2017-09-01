@@ -1,5 +1,3 @@
-import {assign} from 'z-utils'
-
 
 export const userAgent = window.navigator.userAgent
 

@@ -1,3 +1,4 @@
+import assign from './assign'
 import presetEventListener from './presetEventListener'
 
 
