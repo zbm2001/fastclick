@@ -55,7 +55,7 @@ export const deviceIsBlackBerry10 = userAgent.indexOf('BB10') > 0
  *
  * @type boolean
  */
-const presetEventArgs = [
+export const presetEventArgs = [
   ['click', !0],
   ['touchstart', !1],
   ['touchmove', !1],
