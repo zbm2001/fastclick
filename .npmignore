@@ -6,3 +6,16 @@ examples
 
 .project
 .idea
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# esdoc
+.esdoc.json
+doc/
+
+node_modules/
+.project
+.idea
