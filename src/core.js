@@ -1,4 +1,4 @@
-import {assin, uuid, referenceTypes} from 'z-utils'
+import {assign, uuid, referenceTypes} from 'z-utils'
 import {presetEventArgs} from './CONST'
 import notNeeded from './notNeeded'
 import click from './click'
