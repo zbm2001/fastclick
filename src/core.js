@@ -21,22 +21,14 @@ import sendClick from './sendClick'
  * @param {Object} [options={}] The options to override the defaults
  */
 export default function FastClick (layer, options) {
-  this.init(layer, options)
+  if (notNeeded(layer)) return
+  assign(this, options)
+  this.layer = layer
+  this.presetEventListener()
 }
 
 
 assign(FastClick.prototype, {
-
-  /**
-   * Whether a click is currently being tracked.
-   *
-   * @type boolean
-   */
-  init (layer, options) {
-    assign(this, options)
-    this.layer = layer
-    if (notNeeded(layer)) this.presetEventListener()
-  },
 
   /**
    * Set up event handlers as required
