@@ -1,5 +1,5 @@
 {
-  "name": "z-fastclick",
+  "name": "@lib/fastclick",
   "version": "1.1.0",
   "description": "Polyfill to remove click delays on browsers with touch UIs.",
   "scripts": {
