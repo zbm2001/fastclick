@@ -1,3 +1,10 @@
+/*
+ * @name: z-fastclick
+ * @version: 1.1.1
+ * @description: Polyfill to remove click delays on browsers with touch UIs.
+ * @author: [object Object]
+ * @license: undefined
+ */
 'use strict';
 
 var zUtils = require('z-utils');
@@ -151,6 +158,8 @@ function notNeeded (layer) {
  * @returns {boolean}
  */
 function click (event) {
+
+  // It's possible for another FastClick-like library delivered with third-party code to fire a click event before FastClick does (issue #44). In that case, set the click-tracking flag back to false and return early. This will cause onTouchEnd to return early.
   if (this.trackingClick) {
     this.targetElement = null;
     this.trackingClick = false;
@@ -212,7 +221,19 @@ function onMouse (event) {
  * @returns {boolean}
  */
 function touchstart(event) {
-  var targetElement, touch, selection;
+  var targetElement, touch, selection, touchStartTime;
+		
+  // iOS (at least 11.4 and 11.4 beta) can return smaller event.timeStamp values after resuming with
+  // Cordova using UIWebView (and possibly also with mobile Safari?), the timeStamp values can also
+  // be negative
+  // https://github.com/ftlabs/fastclick/issues/549
+  if (event.timeStamp < 0) {
+    touchStartTime = (new Date()).getTime();
+    this.isTrackingClickStartFromEvent = false;
+  } else {
+    touchStartTime = event.timeStamp;
+    this.isTrackingClickStartFromEvent = true;
+  }
 
   // Ignore multiple touches, otherwise pinch-to-zoom is prevented if both fingers are on the FastClick element (issue #111).
   if (event.targetTouches.length > 1) {
@@ -259,14 +280,14 @@ function touchstart(event) {
   }
 
   this.trackingClick = true;
-  this.trackingClickStart = event.timeStamp;
+  this.trackingClickStart = touchStartTime;
   this.targetElement = targetElement;
 
   this.touchStartX = touch.pageX;
   this.touchStartY = touch.pageY;
 
   // Prevent phantom clicks on fast double-tap (issue #36)
-  if ((event.timeStamp - this.lastClickTime) < this.tapDelay) {
+  if ((touchStartTime - this.lastClickTime) < this.tapDelay) {
     event.preventDefault();
   }
 
@@ -312,7 +333,7 @@ var findControl = ('control' in document.createElement('label')
       // If no for attribute exists, attempt to retrieve the first labellable descendant element
       // the list of which is defined here: http://www.w3.org/TR/html5/forms.html#category-label
       return labelElement.querySelector('button, input:not([type=hidden]), keygen, meter, output, progress, select, textarea')
-    });
+    })
 
 /**
  * On touch end, determine whether to send a click event at once.
@@ -321,22 +342,32 @@ var findControl = ('control' in document.createElement('label')
  * @returns {boolean}
  */
 function touchend (event) {
-  var forElement, trackingClickStart, targetTagName, scrollParent, touch, targetElement = this.targetElement;
+  var forElement, trackingClickStart, targetTagName, scrollParent, touch, touchEndTime, targetElement = this.targetElement;
+
+  if (this.isTrackingClickStartFromEvent) {
+    touchEndTime = event.timeStamp;
+  } else {
+    // iOS (at least 11.4 and 11.4 beta) can return smaller event.timeStamp values after resuming with
+    // Cordova using UIWebView (and possibly also with mobile Safari?), the timeStamp values can also
+    // be negative
+    // https://github.com/ftlabs/fastclick/issues/549
+    touchEndTime = (new Date()).getTime();
+  }
 
   if (!this.trackingClick) { return }
 
   // Prevent phantom clicks on fast double-tap (issue #36)
-  if ((event.timeStamp - this.lastClickTime) < this.tapDelay) {
+  if ((touchEndTime - this.lastClickTime) < this.tapDelay) {
     this.cancelNextClick = true;
     return
   }
 
-  if ((event.timeStamp - this.trackingClickStart) > this.tapTimeout) { return }
+  if ((touchEndTime - this.trackingClickStart) > this.tapTimeout) { return }
 
   // Reset to prevent wrong click cancel on input (issue #156).
   this.cancelNextClick = false;
 
-  this.lastClickTime = event.timeStamp;
+  this.lastClickTime = touchEndTime;
 
   trackingClickStart = this.trackingClickStart;
   this.trackingClick = false;
@@ -367,7 +398,7 @@ function touchend (event) {
 
     // Case 1: If the touch started a while ago (best guess is 100ms based on tests for issue #36) then focus will be triggered anyway. Return early and unset the target element reference so that the subsequent click will be allowed through.
     // Case 2: Without this exception for input elements tapped when the document is contained in an iframe, then any inputted text won't be visible even though the value attribute is updated as the user types (issue #37).
-    if ((event.timeStamp - trackingClickStart) > 100 || (deviceIsIOS && window.top !== window && targetTagName === 'INPUT')) {
+    if ((touchEndTime - trackingClickStart) > 100 || (deviceIsIOS && window.top !== window && targetTagName === 'INPUT')) {
       this.targetElement = null;
       return
     }
