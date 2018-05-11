@@ -8,7 +8,19 @@ import {deviceIsIOS, deviceIsIOS4} from './CONST'
  * @returns {boolean}
  */
 export default function touchstart(event) {
-  var targetElement, touch, selection
+  var targetElement, touch, selection, touchStartTime
+		
+  // iOS (at least 11.4 and 11.4 beta) can return smaller event.timeStamp values after resuming with
+  // Cordova using UIWebView (and possibly also with mobile Safari?), the timeStamp values can also
+  // be negative
+  // https://github.com/ftlabs/fastclick/issues/549
+  if (event.timeStamp < 0) {
+    touchStartTime = (new Date()).getTime();
+    this.isTrackingClickStartFromEvent = false;
+  } else {
+    touchStartTime = event.timeStamp;
+    this.isTrackingClickStartFromEvent = true;
+  }
 
   // Ignore multiple touches, otherwise pinch-to-zoom is prevented if both fingers are on the FastClick element (issue #111).
   if (event.targetTouches.length > 1) {
@@ -55,14 +67,14 @@ export default function touchstart(event) {
   }
 
   this.trackingClick = true
-  this.trackingClickStart = event.timeStamp
+  this.trackingClickStart = touchStartTime
   this.targetElement = targetElement
 
   this.touchStartX = touch.pageX
   this.touchStartY = touch.pageY
 
   // Prevent phantom clicks on fast double-tap (issue #36)
-  if ((event.timeStamp - this.lastClickTime) < this.tapDelay) {
+  if ((touchStartTime - this.lastClickTime) < this.tapDelay) {
     event.preventDefault()
   }
 
