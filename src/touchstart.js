@@ -14,13 +14,13 @@ export default function touchstart(event) {
   // Cordova using UIWebView (and possibly also with mobile Safari?), the timeStamp values can also
   // be negative
   // https://github.com/ftlabs/fastclick/issues/549
-  if (event.timeStamp < 0) {
+  // if (event.timeStamp < 0) {
     touchStartTime = (new Date()).getTime();
     this.isTrackingClickStartFromEvent = false;
-  } else {
-    touchStartTime = event.timeStamp;
-    this.isTrackingClickStartFromEvent = true;
-  }
+  // } else {
+  //   touchStartTime = event.timeStamp;
+  //   this.isTrackingClickStartFromEvent = true;
+  // }
 
   // Ignore multiple touches, otherwise pinch-to-zoom is prevented if both fingers are on the FastClick element (issue #111).
   if (event.targetTouches.length > 1) {
