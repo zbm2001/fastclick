@@ -1,10 +1,3 @@
-/*
- * @name: z-fastclick
- * @version: 1.1.1
- * @description: Polyfill to remove click delays on browsers with touch UIs.
- * @author: [object Object]
- * @license: undefined
- */
 'use strict';
 
 var zUtils = require('z-utils');
@@ -158,8 +151,6 @@ function notNeeded (layer) {
  * @returns {boolean}
  */
 function click (event) {
-
-  // It's possible for another FastClick-like library delivered with third-party code to fire a click event before FastClick does (issue #44). In that case, set the click-tracking flag back to false and return early. This will cause onTouchEnd to return early.
   if (this.trackingClick) {
     this.targetElement = null;
     this.trackingClick = false;
@@ -227,13 +218,13 @@ function touchstart(event) {
   // Cordova using UIWebView (and possibly also with mobile Safari?), the timeStamp values can also
   // be negative
   // https://github.com/ftlabs/fastclick/issues/549
-  if (event.timeStamp < 0) {
+  // if (event.timeStamp < 0) {
     touchStartTime = (new Date()).getTime();
     this.isTrackingClickStartFromEvent = false;
-  } else {
-    touchStartTime = event.timeStamp;
-    this.isTrackingClickStartFromEvent = true;
-  }
+  // } else {
+  //   touchStartTime = event.timeStamp;
+  //   this.isTrackingClickStartFromEvent = true;
+  // }
 
   // Ignore multiple touches, otherwise pinch-to-zoom is prevented if both fingers are on the FastClick element (issue #111).
   if (event.targetTouches.length > 1) {
@@ -333,7 +324,7 @@ var findControl = ('control' in document.createElement('label')
       // If no for attribute exists, attempt to retrieve the first labellable descendant element
       // the list of which is defined here: http://www.w3.org/TR/html5/forms.html#category-label
       return labelElement.querySelector('button, input:not([type=hidden]), keygen, meter, output, progress, select, textarea')
-    })
+    });
 
 /**
  * On touch end, determine whether to send a click event at once.
